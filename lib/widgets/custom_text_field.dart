@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 
+// ignore: must_be_immutable
 class CustomFormTextField extends StatelessWidget {
   CustomFormTextField({super.key, required this.hintText, this.onChange});
 
@@ -15,9 +16,10 @@ class CustomFormTextField extends StatelessWidget {
           if (value!.isEmpty) {
             return 'required value';
           }
+          return null;
         },
         onChanged: onChange,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.white
         ),
         decoration: InputDecoration(

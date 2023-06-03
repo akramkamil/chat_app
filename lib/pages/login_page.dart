@@ -11,7 +11,7 @@ import '../helper/show_snack_bar.dart';
 
 
 class LoginPage extends StatefulWidget {
-  LoginPage({super.key});
+  const LoginPage({super.key});
   static String id= 'Login Page';
 
   @override
@@ -47,8 +47,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 74,),
                   
-                  Row(
-                    children: const [
+                  const Row(
+                    children: [
                       Text(
                         'Sign in',
                         style: TextStyle(fontSize: 24, color: Colors.white),
@@ -118,7 +118,9 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // ignore: non_constant_identifier_names
   Future <void> LoginUser() async{
+  // ignore: unused_local_variable
   UserCredential user = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email!, password: password!);
 }
 }
