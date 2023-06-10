@@ -62,6 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   ),
                   CustomFormTextField(
+                    obscureText: true,
                     hintText: 'Password',
                     onChange: (data){
                       password=data;

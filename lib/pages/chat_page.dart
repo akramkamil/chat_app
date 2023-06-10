@@ -101,9 +101,8 @@ class _ChatPageState extends State<ChatPage> {
             ),
           );
         } else {
-          return Scaffold(
-            appBar: AppBar(title: const Text('found'),),
-          );}
+          return Text('loading...');
+          }
       },
     );
   }
