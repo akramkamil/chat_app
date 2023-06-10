@@ -9,7 +9,7 @@ import 'package:scholar_chat/widgets/chat_buble.dart';
 class ChatPage extends StatefulWidget {
   static String id = 'ChatPage';
 
-  ChatPage({super.key});
+  const ChatPage({super.key});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -21,9 +21,9 @@ class _ChatPageState extends State<ChatPage> {
   CollectionReference messages =
       FirebaseFirestore.instance.collection(kMessagesCollections);
   final ScrollController _controller =ScrollController();
-
   @override
   Widget build(BuildContext context) {
+   var email = ModalRoute.of(context)!.settings.arguments;
     return StreamBuilder<QuerySnapshot>(
       stream: messages.orderBy('createdAt',descending: true).snapshots(),
       builder: (context, snapshot) {
@@ -53,10 +53,13 @@ class _ChatPageState extends State<ChatPage> {
               children: [
                 Expanded(
                   child: ListView.builder(
+                    reverse: true,
                     controller: _controller,
                     itemCount: messagesLists.length,
                     itemBuilder: (context, index) {
-                    return ChatBuble(message: messagesLists[index]);
+                    return messagesLists[index].id == email ?
+                     ChatBuble(message: messagesLists[index])
+                     : ChatFriendBuble(message: messagesLists[index]);
                   }),
                 ),
                 Padding(
@@ -64,8 +67,17 @@ class _ChatPageState extends State<ChatPage> {
                   child: TextField(
                     controller: controller,
                     onSubmitted: (data) {
-                      messages.add({'message': data, 'createdAt': DateTime.now()});
+                      messages.add({
+                        'message': data, 
+                        'createdAt': DateTime.now(),
+                        'id': email
+                        });
                       controller.clear();
+                      _controller.animateTo(
+                        0,
+                        duration: const Duration(seconds: 2), 
+                        curve: Curves.easeIn
+                        );
                     },
                     decoration: InputDecoration(
                       hintText: 'Send Message',
@@ -90,7 +102,7 @@ class _ChatPageState extends State<ChatPage> {
           );
         } else {
           return Scaffold(
-            appBar: AppBar(title: Text('hi'),),
+            appBar: AppBar(title: const Text('found'),),
           );}
       },
     );

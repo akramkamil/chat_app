@@ -76,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
 
                       try {
                         LoginUser();
-                        Navigator.pushNamed(context, ChatPage.id);
+                        Navigator.pushNamed(context, ChatPage.id, arguments: email);
                       } on FirebaseAuthException catch (e) {
                             if (e.code == 'weak-password') {
                               showSnackBar(context, 'weak password');
