@@ -2,27 +2,38 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scholar_chat/constants.dart';
 import 'package:scholar_chat/model/message.dart';
+import 'package:scholar_chat/widgets/chat_buble.dart';
 
-import '../widgets/chat_buble.dart';
 
 // ignore: must_be_immutable
-class ChatPage extends StatelessWidget {
+class ChatPage extends StatefulWidget {
   static String id = 'ChatPage';
 
   ChatPage({super.key});
+
+  @override
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
   TextEditingController controller = TextEditingController();
+
   CollectionReference messages =
       FirebaseFirestore.instance.collection(kMessagesCollections);
+  final ScrollController _controller =ScrollController();
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: messages.get(),
+    return StreamBuilder<QuerySnapshot>(
+      stream: messages.orderBy('createdAt',descending: true).snapshots(),
       builder: (context, snapshot) {
-        List<Message> messagesLists = [];
+
+        if (snapshot.hasData) {
+                  List<Message> messagesLists = [];
+
         for (var i = 0; i < snapshot.data!.docs.length; i++) {
           messagesLists.add(Message.fromJson(snapshot.data!.docs[i]));
         }
-        if (snapshot.hasData) {
           return Scaffold(
             appBar: AppBar(
               automaticallyImplyLeading: false,
@@ -42,9 +53,10 @@ class ChatPage extends StatelessWidget {
               children: [
                 Expanded(
                   child: ListView.builder(
+                    controller: _controller,
                     itemCount: messagesLists.length,
                     itemBuilder: (context, index) {
-                    return chatBuble(message: messagesLists[index],);
+                    return ChatBuble(message: messagesLists[index]);
                   }),
                 ),
                 Padding(
@@ -52,12 +64,12 @@ class ChatPage extends StatelessWidget {
                   child: TextField(
                     controller: controller,
                     onSubmitted: (data) {
-                      messages.add({'message': data});
+                      messages.add({'message': data, 'createdAt': DateTime.now()});
                       controller.clear();
                     },
                     decoration: InputDecoration(
                       hintText: 'Send Message',
-                      suffix: Icon(
+                      suffix: const Icon(
                         Icons.send,
                         color: kPrimaryColor,
                       ),
@@ -66,7 +78,7 @@ class ChatPage extends StatelessWidget {
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                           color: kPrimaryColor,
                         ),
                       ),
@@ -77,8 +89,9 @@ class ChatPage extends StatelessWidget {
             ),
           );
         } else {
-          return Text('loding');
-        }
+          return Scaffold(
+            appBar: AppBar(title: Text('hi'),),
+          );}
       },
     );
   }

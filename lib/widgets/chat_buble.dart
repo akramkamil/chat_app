@@ -3,8 +3,8 @@ import 'package:scholar_chat/model/message.dart';
 
 import '../constants.dart';
 
-class chatBuble extends StatelessWidget {
-  const chatBuble({
+class ChatBuble extends StatelessWidget {
+  const ChatBuble({
     super.key, required this.message,
   });
   final Message message;
@@ -16,15 +16,15 @@ class chatBuble extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             color: kPrimaryColor,
-            borderRadius: const BorderRadius.only(
+            borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(32),
                 topRight: Radius.circular(32),
                 bottomRight: Radius.circular(32))),
         child: Text(
           message.textMessage,
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
       ),
     );
